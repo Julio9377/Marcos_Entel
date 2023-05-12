@@ -1,4 +1,5 @@
 import requests
+import re
 from bs4 import BeautifulSoup
 
 # URL de la página web que quieres analizar
@@ -11,14 +12,21 @@ response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
 
 # Encontrar todas las etiquetas HTML en la página
-divs = soup.find_all('div', {'class': 'e-catalog-equipment__box e-catalog-equipment__box--counted'})
+div = soup.find('div', {'class': 'e-catalog-equipment__grid__list e-box-inline-block-ts e-box-inline-block--clear-tm'})
 
-contenido_divs  = []
+etiquetas = div.find_all()
+
+etiquetas_lista  = []
 # Imprimir las etiquetas encontradas
 
-for div in divs:
+for etiqueta in etiquetas:
     
-    contenido_divs.append(div)
+    etiquetas_lista.append(etiqueta)
 
-print(len(contenido_divs))
-print(contenido_divs[1])
+print(len(etiquetas_lista))
+##print(etiquetas_lista[1])
+
+cadena = etiquetas_lista[1]
+print(cadena)
+print(type(cadena))
+  

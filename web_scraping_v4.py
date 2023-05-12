@@ -24,8 +24,8 @@ options.add_argument("--disable-extensions")
 options.add_argument("--disable-notifications")
 
 driver = webdriver.Chrome(r"D:\ChromeDriver\chromedriver.exe",chrome_options=options)
-archivo_exportado = "D:\\Marcos\\Datos_Entel.csv"
-archivo_backup = "D:\\Marcos\\Datos_Entel_backup.csv"
+archivo_exportado = "D:\\Marcos_Entel\\Datos_Entel.csv"
+archivo_backup = "D:\\Marcos_Entel\\Datos_Entel_backup.csv"
 # Inicializamos el navegador
 #Lista = ['samsung-galaxy-a22-64','samsung-galaxy-a33']#,'samsung-galaxy-s21-fe-128gb','iphone-13-pro-max-128gb','samsung-galaxy-a53']
 Lista = ['samsung-galaxy-a53','motorola-moto-g31','zte-blade-v30-vita','samsung-galaxy-s21-fe-128gb','oppo-a54','samsung-galaxy-a03-core','iphone-14-128gb','iphone-13-pro-max-128gb','vivo-v21','iphone-13-pro-128gb','vivo-y-21s','vivo-y-53s','iphone-14-256gb','iphone-14-512gb','iphone-14-plus-256gb','iphone-14-pro-256gb','xiaomi-redmi-10-2022','huawei-nova-9','zte-blade-a51','oppo-reno-7','iphone-13-512gb','iphone-13-pro-512gb','samsung-galaxy-z-fold-4-256gb','samsung-galaxy-z-flip-4-128gb','samsung-galaxy-z-flip-4-256gb','redmi-10c','redmi-note-11s','zte-blade-a31-plus-32gb','honor-x7','samsung-galaxy-s22','poco-m4-pro-128gb-5g','oppo-a77','honor-50-256gb','zte-blade-a5-2020-32gb','honor-70-128gb','samsung-galaxy-s22-ultra','samsung-galaxy-a52s','huawei-nova-y70','samsung-galaxy-a23','xiaomi-redmi-10a','vivo-y55','motorola-moto-g50','iphone-12-64gb','xiaomi-11-t','iphone-13-256gb','motorola-e-20','oppo-a-16','xiaomi-redmi-note-11-128gb','apple-iphone-se-2022-64gb','galaxy-a13','iphone-13-mini-128gb','honor-x9','zte-a51-lite','honor-x8-pack','samsung-galaxy-a03s','iphone-13-128gb','edge-30-fusion-audifonos','edge-30-neo','edge-30-neo-audifonos','galaxy-a04e','motorola-moto-edge-30-pro-5g','iphone-14-plus-128gb','iphone-14-pro-128gb','iphone-14-cargador','iphone-14-plus-airpods','apple-iphone-11-64gb','honor-70-256gb-earbuds-x','samsung-galaxy-s20-fe-5g','motorola-moto-g22','vivo-y22s','samsung-galaxy-a22-64','samsung-galaxy-a33','xiaomi-redmi-10c-364gb','samsung-galaxy-a04','redmi-note-11s-128gb-5g','oppo-a57-128gb','honor-x6']
@@ -81,9 +81,10 @@ for url in urls:
                     except StaleElementReferenceException:
                         continue
             Resumen = driver.find_element("xpath",'/html/body/div[4]/div[1]/section[1]/div/div[3]/div[2]/div[2]/div[4]/div/div[1]').text
-            Resumen2 = Resumen.replace("\n"," ").replace("\s+"," ").replace("RESUMEN DE PEDIDO ","")\
+            print(Resumen)
+            Resumen2 = Resumen.replace("\n"," ").replace("\s+"," ").replace("Resumen de pedido ","")\
                             .replace(" Equipo: Cantidad de equipos 1 Precio total del equipo ","|CONTADO|")\
-                            .replace(" Equipo: Cantidad de equipos 1 CUOTA INICIAL: ","|CUOTA|").replace("S/ ","").replace(" Plan: Empresario Ultra ","|").replace(" Chip y delivery: GRATIS","")
+                            .replace(" Equipo: Cantidad de equipos 1 CUOTA INICIAL: ","|CUOTA|").replace("S/ ","").replace(" Plan: Empresa Pro ","|").replace(" Chip y delivery: Gratis","")
             datos.append(Resumen2)
             #print(datos)
             #print('')
@@ -95,6 +96,7 @@ df = pd.DataFrame(datos,columns=["General"])
 df.to_csv(archivo_backup,index=False)
 df["General"] = df["General"].str.replace("\s+"," ")
 df['General'] = df['General'].astype('str')
+#df['Plan_Tarifario'] = df['Plan_Tarifario'].astype('str')
 df = df.assign(Equipo=df.General.str.split('|').str[0],Plan=df.General.str.split('|').str[1],Precio_Equipo=df.General.str.split('|').str[2],Tipo=df.General.str.split('|').str[3])#,Modo_Cobro=df.General.str.split('|').str[4],Contado_CuotaInicial=df.General.str.split('|').str[5],)
 #df = df.assign(CONTADO_CUOTAS=df.Plan.str.split('*').str[0],Plan_Tarifario=df.Plan.str.split('*').str[1])
 df["Plan_Tarifario"] = df["Tipo"].str.split(" Dto.").str[0]
