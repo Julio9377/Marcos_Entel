@@ -16,6 +16,12 @@ import os
 import shutil
 from tkinter import messagebox
 import pandas as pd
+import requests
+import re
+from bs4 import BeautifulSoup
+
+
+
 
 options =  webdriver.ChromeOptions()
 options.add_argument('--start-maximized')

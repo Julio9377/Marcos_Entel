@@ -11,22 +11,51 @@ response = requests.get(url)
 # Convertir el contenido HTML en un objeto BeautifulSoup
 soup = BeautifulSoup(response.text, 'html.parser')
 
-# Encontrar todas las etiquetas HTML en la página
-div = soup.find('div', {'class': 'e-catalog-equipment__grid__list e-box-inline-block-ts e-box-inline-block--clear-tm'})
+divs = soup.find_all('div')
 
-etiquetas = div.find_all()
+grupo_div = soup.find('div',class_='e-catalog-equipment__grid__list e-box-inline-block-ts e-box-inline-block--clear-tm')
 
-etiquetas_lista  = []
-# Imprimir las etiquetas encontradas
+lista = []
 
-for etiqueta in etiquetas:
-    
-    etiquetas_lista.append(etiqueta)
+try:
+    for div in grupo_div.find_all('div', recursive=False):
+        href = div.div.a['href']
+        if href=='javascript:void(0);':
+            href = div.div['href']
+            lista.append(href)
+        else:
+            href = div.div['href']
+            lista.append(href)
+        #print(href)
+except AttributeError:
+    pass
+print(len(lista))
+print(lista)
+try:
+    lista.remove("javascript:void(0);")
+except AttributeError:
+    pass
+print(lista)
+print(len(lista))
 
-print(len(etiquetas_lista))
-##print(etiquetas_lista[1])
 
-cadena = etiquetas_lista[1]
-print(cadena)
-print(type(cadena))
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#elementos = [div.get(strip=True) for div in grupo_div.find_all('div')]
+#for elemento in elementos:
+#    print(elemento)
+
+#print(soup.find("div", class_="e-catalog-equipment__box e-catalog-equipment__box--counted").decompose())
